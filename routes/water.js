@@ -15,6 +15,7 @@ router.get('/', function (req, res, next) {
   const query = `SELECT * from waterentry WHERE id=${id}`
   con.query(query)
     .then(resp => {
+      resp.rows[0] = Object.assign(resp.rows[0], resp.rows[0].labdata)
       return res.send(resp.rows[0])
     })
     .catch(err => {
@@ -128,8 +129,26 @@ router.get('/getDashBoardData', function (req, res, next) {
 router.post('/', function (req, res, next) {
   const {
     op,
-    id
+    id,
+    lab
   } = req.query
+  const con = pg.connect()
+  if (lab) {
+    const labResult = req.body
+    const query = `UPDATE waterentry
+    SET labdata=${labResult}
+    WHERE id=$1
+    `
+    return con.query(query, [labResult])
+      .then(resp => {
+        console.log(resp)
+        return res.send()
+      })
+      .catch(err => {
+        console.error(err)
+        return res.send()
+      })
+  }
   const {
     district,
     hud,
@@ -152,7 +171,7 @@ router.post('/', function (req, res, next) {
     taplastName,
     samplesTaken
   } = req.body
-  const con = pg.connect()
+
   let query
   if (op === 'update') {
     query = `UPDATE waterentry
@@ -164,13 +183,6 @@ router.post('/', function (req, res, next) {
     "habitation" = ${habitation},
     "placeType" = '${placeType}',
     "dateOfInspection" = $1,
-    "defaultImage" = '${defaultImage}',
-    "positiveHouses" = ${positiveHouses},
-    "houseIndex" = ${houseIndex},
-    "containers" = ${containers},
-    "containerIndex" = ${containerIndex},
-    "breteauIndex" = ${breteauIndex},
-    "numberOfHouses" = ${numberOfHouses},
     "infiltrationgalleryName" = '${infiltrationgalleryName}',
     "infiltrationwellName" = '${infiltrationwellName}',
     "openwellName" = '${openwellName}',
@@ -182,13 +194,7 @@ router.post('/', function (req, res, next) {
     "tapfirstName" = '${tapfirstName}',
     "tapmiddleName" = '${tapmiddleName}',
     "taplastName" = '${taplastName}',
-    "dateOfWork" = $2,
-    "workersEngaged" = ${workersEngaged},
-    "otherWorkers" = ${otherWorkers},
-    "housesEngaged" = ${housesEngaged},
-    "housesCleared" = ${housesCleared},
-    "containersDestroyed" = ${containersDestroyed},
-    "dateOfFogging" = $3 
+    "samplesTaken"= '${samplesTaken}'
     WHERE id=${id}
     `
   } else {
