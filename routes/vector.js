@@ -141,7 +141,18 @@ router.post('/', function (req, res, next) {
       housesEngaged,
       housesCleared,
       containersDestroyed,
-      dateOfFogging
+      dateOfFogging,
+      infiltrationgalleryName,
+      infiltrationwellName,
+      openwellName,
+      borewellName,
+      collectionsumpName,
+      pumpingstationName,
+      overheadtankName,
+      roplantName,
+      tapfirstName,
+      tapmiddleName,
+      taplastName
     }
   } = req.body
   const con = pg.connect()
@@ -163,13 +174,24 @@ router.post('/', function (req, res, next) {
       "containers" = ${containers},
       "containerIndex" = ${containerIndex},
       "breteauIndex" = ${breteauIndex},
-      "numberOfHouses" = ${numberOfHouses}
+      "numberOfHouses" = ${numberOfHouses},
+      "infiltrationgalleryName" = ${infiltrationgalleryName},
+      "infiltrationwellName" = ${infiltrationwellName},
+      "openwellName" = ${openwellName},
+      "borewellName" = ${borewellName},
+      "collectionsumpName" = ${collectionsumpName},
+      "pumpingstationName" = ${pumpingstationName},
+      "overheadtankName" = ${overheadtankName},
+      "roplantName" = ${roplantName},
+      "tapfirstName" = ${tapfirstName},
+      "tapmiddleName" = ${tapmiddleName},
+      "taplastName" = ${taplastName}
       WHERE id=${id}
       `
     } else {
       query = `INSERT INTO vectorsurvey (
-        "userId",
-        "district",
+          "userId",
+          "district",
           "hud",
           "block",
           "village",
@@ -182,7 +204,18 @@ router.post('/', function (req, res, next) {
           "containers",
           "containerIndex",
           "breteauIndex",
-          "numberOfHouses"
+          "numberOfHouses",
+          "infiltrationgalleryName",
+          "infiltrationwellName",
+          "openwellName",
+          "borewellName",
+          "collectionsumpName",
+          "pumpingstationName",
+          "overheadtankName",
+          "roplantName",
+          "tapfirstName",
+          "tapmiddleName",
+          "taplastName"
         )
       VALUES (
         ${userId},
@@ -199,7 +232,19 @@ router.post('/', function (req, res, next) {
           ${containers},
           ${containerIndex},
           ${breteauIndex},
-          ${numberOfHouses})`
+          ${numberOfHouses},
+          ${infiltrationgalleryName},
+          ${infiltrationwellName},
+          ${openwellName},
+          ${borewellName},
+          ${collectionsumpName},
+          ${pumpingstationName},
+          ${overheadtankName},
+          ${roplantName},
+          ${tapfirstName},
+          ${tapmiddleName},
+          ${taplastName}
+          )`
     }
   } else {
     if (op === 'update') {
